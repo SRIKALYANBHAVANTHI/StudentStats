@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">StudentStats</string>
+    <string name="total_students">Total Students:</string>
+</resources>
