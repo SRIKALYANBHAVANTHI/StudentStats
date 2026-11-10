@@ -39,35 +39,51 @@ public class MainActivity extends AppCompatActivity {
 
     private void calculatePercentages() {
         try {
-            int totalStudents = Integer.parseInt(totalStudentsEditText.getText().toString());
-            int groupA = Integer.parseInt(groupAEditText.getText().toString());
-            int groupB = Integer.parseInt(groupBEditText.getText().toString());
-            int groupC = Integer.parseInt(groupCEditText.getText().toString());
-            int groupD = Integer.parseInt(groupDEditText.getText().toString());
-            int groupF = Integer.parseInt(groupFEditText.getText().toString());
+            int totalStudents = Integer.parseInt(totalStudentsEditText.getText().toString().trim());
+            int groupA = Integer.parseInt(groupAEditText.getText().toString().trim());
+            int groupB = Integer.parseInt(groupBEditText.getText().toString().trim());
+            int groupC = Integer.parseInt(groupCEditText.getText().toString().trim());
+            int groupD = Integer.parseInt(groupDEditText.getText().toString().trim());
+            int groupF = Integer.parseInt(groupFEditText.getText().toString().trim());
 
-            if(totalStudents!=(groupA+groupB+groupC+groupD+groupF))
-            {
-                Toast.makeText(this, "Incorrect total number of students", Toast.LENGTH_SHORT).show();
+            if (totalStudents <= 0) {
+                showErrorDialog("Total students must be greater than zero.");
+                return;
             }
-            else {
-                double percentageA = (double) groupA / totalStudents * 100;
-                double percentageB = (double) groupB / totalStudents * 100;
-                double percentageC = (double) groupC / totalStudents * 100;
-                double percentageD = (double) groupD / totalStudents * 100;
-                double percentageF = (double) groupF / totalStudents * 100;
 
-                // Prepare result message
-                String resultMessage = String.format("Group A: %.2f%%\nGroup B: %.2f%%\nGroup C: %.2f%%\nGroup D: %.2f%%\nGroup F: %.2f%%",
-                        percentageA, percentageB, percentageC, percentageD, percentageF);
-
-                // Show results in a dialog with option to display chart
-                showResultDialog(resultMessage, new float[]{(float) percentageA, (float) percentageB, (float) percentageC, (float) percentageD, (float) percentageF});
-
+            if (groupA < 0 || groupB < 0 || groupC < 0 || groupD < 0 || groupF < 0) {
+                showErrorDialog("Grade-group counts cannot be negative.");
+                return;
             }
+
+            long groupTotal = (long) groupA + groupB + groupC + groupD + groupF;
+            if (totalStudents != groupTotal) {
+                showErrorDialog("The sum of groups A, B, C, D, and F must equal the total number of students.");
+                return;
+            }
+
+            double percentageA = (double) groupA / totalStudents * 100;
+            double percentageB = (double) groupB / totalStudents * 100;
+            double percentageC = (double) groupC / totalStudents * 100;
+            double percentageD = (double) groupD / totalStudents * 100;
+            double percentageF = (double) groupF / totalStudents * 100;
+
+            String resultMessage = String.format(
+                    java.util.Locale.getDefault(),
+                    "Group A: %.2f%%\nGroup B: %.2f%%\nGroup C: %.2f%%\nGroup D: %.2f%%\nGroup F: %.2f%%",
+                    percentageA, percentageB, percentageC, percentageD, percentageF
+            );
+
+            showResultDialog(resultMessage, new float[]{
+                    (float) percentageA,
+                    (float) percentageB,
+                    (float) percentageC,
+                    (float) percentageD,
+                    (float) percentageF
+            });
 
         } catch (NumberFormatException e) {
-
+            showErrorDialog("Enter a valid whole number in every field.");
         }
     }
 
@@ -89,8 +105,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.create().show();
     }
 
     private void showErrorDialog(String message) {
@@ -103,8 +118,6 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        builder.create().show();
     }
 }
-
