@@ -1,14 +1,15 @@
 package com.example.studentstats;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -20,7 +21,6 @@ public class BarChartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_bar_chart);
 
         float[] percentages = getIntent().getFloatArrayExtra("percentages");
-
         BarChart barChart = findViewById(R.id.bar_chart);
 
         ArrayList<BarEntry> entries = new ArrayList<>();
@@ -34,18 +34,17 @@ public class BarChartActivity extends AppCompatActivity {
         BarData barData = new BarData(dataSet);
         barChart.setData(barData);
 
-        // Set group names for X-axis
+        // Label the X-axis with the grade groups.
         final String[] groupNames = {"A", "B", "C", "D", "F"};
         IndexAxisValueFormatter xAxisFormatter = new IndexAxisValueFormatter(groupNames);
         barChart.getXAxis().setValueFormatter(xAxisFormatter);
-        barChart.getXAxis().setPosition(com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM);
+        barChart.getXAxis().setPosition(
+                com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM
+        );
         barChart.getXAxis().setGranularity(1f);
 
-        };
-
-        // Set value formatter for Y-axis
-
-        .invalidate(); // Refresh chart
+        // Redraw the chart after assigning its data and axis labels.
+        barChart.invalidate();
     }
 
     private int[] getBarColors() {
